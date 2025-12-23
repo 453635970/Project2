@@ -120,7 +120,8 @@ WebSocketClient::~WebSocketClient() {
     WSACleanup();
 }
 
-bool WebSocketClient::connect(const std::string& host, const std::string& port, const std::string& path) {
+bool WebSocketClient::connect(const std::string& host, const std::string& port, const std::string& path) 
+{
     if (connected_) return true;
 
     addrinfo hints{};
@@ -131,10 +132,13 @@ bool WebSocketClient::connect(const std::string& host, const std::string& port, 
     if (rc != 0 || !result) return false;
 
     SOCKET s = INVALID_SOCKET;
-    for (addrinfo* rp = result; rp != nullptr; rp = rp->ai_next) {
+    for (addrinfo* rp = result; rp != nullptr; rp = rp->ai_next) 
+    {
         s = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-        if (s == INVALID_SOCKET) continue;
-        if (::connect(s, rp->ai_addr, (int)rp->ai_addrlen) == 0) break;
+        if (s == INVALID_SOCKET) 
+        continue;
+        if (::connect(s, rp->ai_addr, (int)rp->ai_addrlen) == 0) 
+        break;
         closesocket(s);
         s = INVALID_SOCKET;
     }
@@ -159,7 +163,8 @@ bool WebSocketClient::connect(const std::string& host, const std::string& port, 
     return true;
 }
 
-bool WebSocketClient::doHandshake(const std::string& host, const std::string& path, const std::string& key) {
+bool WebSocketClient::doHandshake(const std::string& host, const std::string& path, const std::string& key) 
+{
     std::ostringstream req;
     req << "GET " << path << " HTTP/1.1\r\n"
         << "Host: " << host << "\r\n"
@@ -185,7 +190,8 @@ bool WebSocketClient::doHandshake(const std::string& host, const std::string& pa
     }
 
     // check for 101 Switching Protocols
-    if (header.find("HTTP/1.1 101") == std::string::npos) return false;
+    if (header.find("HTTP/1.1 101") == std::string::npos) 
+    return false;
 
     // compute expected accept value
     std::string acceptSource = key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
@@ -195,7 +201,8 @@ bool WebSocketClient::doHandshake(const std::string& host, const std::string& pa
 
     // find Sec-WebSocket-Accept header
     std::string::size_type pos = header.find("Sec-WebSocket-Accept:");
-    if (pos == std::string::npos) return false;
+    if (pos == std::string::npos) 
+    return false;
     pos += strlen("Sec-WebSocket-Accept:");
     // read line
     std::string::size_type eol = header.find("\r\n", pos);

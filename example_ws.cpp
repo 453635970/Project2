@@ -4,8 +4,9 @@
 
 int main(int argc, char** argv) 
 {
-    std::string host = "localhost";
-    std::string port = "8080";
+
+    std::string host = "124.222.6.60";
+    std::string port = "8800";
     std::string path = "/";
     if (argc >= 2) host = argv[1];
     if (argc >= 3) port = argv[2];
