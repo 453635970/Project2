@@ -35,7 +35,7 @@ TEST(AddTest, Positive) {
 
 // 测试用例 2：负数相加
 TEST(AddTest, Negative) {
-    EXPECT_EQ(add(-1, -2), -3);+
+    EXPECT_EQ(add(-1, -2), -3);
     EXPECT_EQ(add(-5, 3), -2);
 }
 

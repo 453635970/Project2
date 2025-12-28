@@ -107,6 +107,30 @@ namespace {
             out[i*4 + 3] = (hs[i]) & 0xFF;
         }
     }
+
+    bool isValidUTF8(const std::string& str) {
+    // 验证是否为有效的UTF-8字符串
+        int i = 0;
+        while (i < str.length()) {
+            unsigned char c = static_cast<unsigned char>(str[i]);
+            if (c <= 0x7F) {
+                i++;
+            } else if ((c & 0xE0) == 0xC0) {
+                if (i + 1 >= str.length() || (str[i + 1] & 0xC0) != 0x80) return false;
+                i += 2;
+            } else if ((c & 0xF0) == 0xE0) {
+                if (i + 2 >= str.length() || (str[i + 1] & 0xC0) != 0x80 || (str[i + 2] & 0xC0) != 0x80) return false;
+                i += 3;
+            } else if ((c & 0xF8) == 0xF0) {
+                if (i + 3 >= str.length() || (str[i + 1] & 0xC0) != 0x80 || 
+                    (str[i + 2] & 0xC0) != 0x80 || (str[i + 3] & 0xC0) != 0x80) return false;
+                i += 4;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
 }
 
 // ---------------- WebSocketClient implementation ----------------
@@ -325,11 +349,24 @@ std::string WebSocketClient::recvText() {
     if (!recvFrame(payload, opcode)) {
         return std::string();
     }
-    if (opcode == 0x1 || opcode == 0x2) {
+    
+    if (opcode == 0x1) {  // 文本帧
+        std::string result(payload.begin(), payload.end());
+        // 验证是否为有效的UTF-8
+        if (isValidUTF8(result)) {
+            return result;
+        } else {
+            // 如果不是有效的UTF-8，可以选择转换或返回错误
+            // 这里简单返回，但你可能想要记录日志
+            return result;
+        }
+    }
+    else if (opcode == 0x2) {  // 二进制帧
+        // 二进制帧不应该作为文本处理，这里转换为字符串但可能包含乱码
         return std::string(payload.begin(), payload.end());
     }
-    // handle close (0x8) or ping/pong (0x9/0xA) simply
-    if (opcode == 0x8) {
+    // handle close (0x8) or ping/pong (0x9/0xA) 
+    else if (opcode == 0x8) {
         close();
         return std::string();
     }

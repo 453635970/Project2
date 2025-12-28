@@ -1,8 +1,9 @@
 {
     "version": "0.2.0",
     "configurations": [
+
         {
-            "name": "MinGW 调试 GTest",  // 配置名称（自定义）
+            "name": "Debug example_ws.exe",  // 配置名称（自定义）
             "type": "cppdbg",  // 调试器类型（MinGW 用 cppdbg，基于 GDB）
             "request": "launch",  // 启动方式（launch 为直接启动调试）
             "program": "${workspaceFolder}/example_ws.exe",  // 待调试的可执行文件路径
@@ -14,6 +15,30 @@
             "MIMode": "gdb",  // 调试器模式（MinGW 对应 gdb）
             "preLaunchTask": "build gtest g++",  // 调试前执行的任务（需与 tasks.json 中的 label 一致）
             "miDebuggerPath": "d:/1/mingw64/bin/gdb.exe",  // GDB 路径（请根据你的系统调整或将 gdb 加入 PATH）
+            "setupCommands": [
+                {
+                    "description": "启用漂亮打印",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "logging": {
+                "moduleLoad": false
+            }
+        },
+        {
+            "name": "Debug run_tests.exe (GTest)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/run_tests.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "preLaunchTask": "build tests g++",
+            "miDebuggerPath": "d:/1/mingw64/bin/gdb.exe",
             "setupCommands": [
                 {
                     "description": "启用漂亮打印",

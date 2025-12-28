@@ -4,7 +4,7 @@
 
 int main(int argc, char** argv) 
 {
-
+system("chcp 65001"); // 设置控制台为UTF-8编码
     std::string host = "124.222.6.60";
     std::string port = "8800";
     std::string path = "/";
@@ -20,7 +20,18 @@ int main(int argc, char** argv)
         return 1;
     }
 
-    std::string msg = "Hello from example_ws";
+    std::string recv = ws.recvText();
+    if (recv.empty()) 
+    {
+        std::cerr << "Receive failed or connection closed" << std::endl;
+    } else 
+    {
+        std::cout << "Received: " << recv << std::endl;
+    }
+
+
+    {
+     std::string msg = "123666666";
     std::cout << "Sending: " << msg << std::endl;
     if (!ws.sendText(msg)) 
     {
@@ -38,8 +49,9 @@ int main(int argc, char** argv)
     {
         std::cout << "Received: " << recv << std::endl;
     }
-
+}
     ws.close();
     
     return 0;
 }
+
