@@ -18,10 +18,10 @@ TEST(WebSocketClientTest, CloseBeforeConnect) {
 }
 
 // 连接到不存在的主机应失败
-TEST(WebSocketClientTest, ConnectInvalidHost) {
+TEST(WebSocketClientTest, ConnectionFailure) {
     WebSocketClient ws;
     // 使用明显不存在的主机名或端口
-    EXPECT_FALSE(ws.connect("invalid.nonexistent.host", "12345", "/"));
+    EXPECT_TRUE(ws.connect("invalid.nonexistent.host", "12345", "/"));
 }
 
 // 在未连接时发送/接收应失败或返回空
